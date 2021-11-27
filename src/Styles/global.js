@@ -29,14 +29,13 @@ footer {
     --gray: #333333;
     --green: #11995E;
     --white: #FFFFFF ;
-    --light-gray: #999999  ;
+    --offwhite:  #DCDCDC
+    --lightgray: #999999;
     --red: #c53030;
 
 body{
-  
-    background: var(--white);
-    color: var(--black);
-  
+    background-color: #DCDCDC;
+    color: var(--black); 
 }
 
 body, input, button{

@@ -1,7 +1,7 @@
 import { Button } from "../../Components/Button";
 import { useHistory } from "react-router-dom";
 import { TextField } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,7 +9,7 @@ import { api } from "../../Services/api";
 import { toast } from "react-toastify";
 import "./style.css";
 
-export const Register = () => {
+export const Register = ({ authenticated }) => {
   const history = useHistory();
 
   const schema = yup.object().shape({
@@ -23,12 +23,14 @@ export const Register = () => {
       .string()
       .required("Campo Obrigatório")
       .matches("^[0-9]*$", "Apenas Números"),
-    course_module: yup.string().required("required"),
+    course_module: yup.string().required("Campo Obrigatório"),
     password: yup
       .string()
-      .min(8, "Mínimo de 8 dígitos")
+      .min(6, "Mínimo de 6 dígitos")
       .required("Campo Obrigatório"),
-    confirm_password: yup.string().oneOf([yup.ref("password"), null], "error"),
+    confirm_password: yup
+      .string()
+      .oneOf([yup.ref("password"), null], "As senha não correspondem"),
   });
 
   const {
@@ -39,9 +41,9 @@ export const Register = () => {
     resolver: yupResolver(schema),
   });
 
-  const handleNavigation = (path) => {
-    return history.push(path);
-  };
+  if (authenticated) {
+    return <Redirect to="/dashboard" />;
+  }
 
   const onSubmitFunction = ({
     email,
@@ -62,105 +64,102 @@ export const Register = () => {
   };
 
   return (
-    <div className="main">
-      <div className="title">
-        <h1>Kenzie</h1>
-        <div className="title-hub">
-          <h1>Hub</h1>
+    <div className="register-container">
+      <div className="register-content">
+        <div className="title">
+          <h1>Kenzie</h1>
+          <div className="title-hub">
+            <h1>Hub</h1>
+          </div>
         </div>
+
+        <form
+          onSubmit={handleSubmit(onSubmitFunction)}
+          className="form-container"
+        >
+          <div className="textfield-form">
+            <TextField
+              className="form-textfield"
+              label="Nome"
+              style={{ width: 452 }}
+              {...register("name")}
+              helperText={errors.name?.message}
+            />
+          </div>
+
+          <div className="textfield-form">
+            <TextField
+              className="form-textfield"
+              id="outlined-required"
+              label="E-mail"
+              style={{ width: 452 }}
+              {...register("email")}
+              helperText={errors.email?.message}
+            />
+          </div>
+
+          <div className="textfield-form">
+            <TextField
+              className="form-textfield"
+              id="outlined-required"
+              label="Bio"
+              style={{ width: 452 }}
+              {...register("bio")}
+              helperText={errors.bio?.message}
+            />
+          </div>
+
+          <div className="textfield-form">
+            <TextField
+              className="form-textfield"
+              id="outlined-required"
+              label="Telefone"
+              style={{ width: 452 }}
+              {...register("contact")}
+              helperText={errors.contact?.message}
+            />
+          </div>
+
+          <div className="textfield-form">
+            <TextField
+              className="form-textfield"
+              label="Módulo do curso"
+              style={{ width: 452 }}
+              {...register("course_module")}
+              helperText={errors.course_module?.message}
+            />
+          </div>
+
+          <div className="textfield-form">
+            <TextField
+              label="Senha"
+              type="password"
+              autoComplete="current-password"
+              style={{ width: 452 }}
+              {...register("password")}
+              helperText={errors.password?.message}
+            />
+          </div>
+
+          <div className="textfield-form">
+            <TextField
+              label="Confirmar Senha"
+              type="password"
+              autoComplete="current-password"
+              style={{ width: 452 }}
+              {...register("confirm_password")}
+              helperText={errors.confirm_password?.message}
+            />
+          </div>
+
+          <Button className="button-form" type="submit">
+            Cadastre-se
+          </Button>
+          <p className="footer-form">
+            Já possui uma conta? <Link to="/signin">Faça seu login.</Link>
+          </p>
+        </form>
       </div>
-
-      <form
-        onSubmit={handleSubmit(onSubmitFunction)}
-        className="form-container"
-      >
-        <div className="textfield-form">
-          <TextField
-            className="form-textfield"
-            id="outlined-required"
-            label="Nome"
-            style={{ width: 452 }}
-            {...register("name")}
-          />
-          <div className="error-form">{errors.name?.message}</div>
-        </div>
-
-        <div className="textfield-form">
-          <TextField
-            className="form-textfield"
-            id="outlined-required"
-            label="E-mail"
-            style={{ width: 452 }}
-            {...register("email")}
-          />
-          <div className="error-form">{errors.email?.message}</div>
-        </div>
-
-        <div className="textfield-form">
-          <TextField
-            className="form-textfield"
-            id="outlined-required"
-            label="Bio"
-            style={{ width: 452 }}
-            {...register("bio")}
-          />
-          <div className="error-form">{errors.bio?.message}</div>
-        </div>
-
-        <div className="textfield-form">
-          <TextField
-            className="form-textfield"
-            id="outlined-required"
-            label="Telefone"
-            style={{ width: 452 }}
-            {...register("contact")}
-          />
-          <div className="error-form">{errors.contact?.message}</div>
-        </div>
-
-        <div className="textfield-form">
-          <TextField
-            className="form-textfield"
-            id="outlined-required"
-            label="Módulo do curso"
-            style={{ width: 452 }}
-            {...register("course_module")}
-          />
-          <div className="error-form">{errors.course_module?.message}</div>
-        </div>
-
-        <div className="textfield-form">
-          <TextField
-            id="outlined-password-input"
-            label="Senha"
-            type="password"
-            autoComplete="current-password"
-            style={{ width: 452 }}
-            {...register("password")}
-          />
-          <div className="error-form">{errors.password?.message}</div>
-        </div>
-
-        <div className="textfield-form">
-          <TextField
-            id="outlined-password-input"
-            label="Confirmar Senha"
-            type="password"
-            autoComplete="current-password"
-            style={{ width: 452 }}
-            {...register("confirm_password")}
-          />
-          <div className="error-form">{errors.confirm_password?.message}</div>
-        </div>
-
-        <Button className="button-form" type="submit">
-          {/* onClick={() => handleNavigation("/dashboard")} */}
-          Cadastre-se
-        </Button>
-        <p className="footer-form">
-          Já possui uma conta? <Link to="/signin">Faça seu login.</Link>
-        </p>
-      </form>
     </div>
   );
 };

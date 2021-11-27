@@ -1,0 +1,42 @@
+.display-tech-container {
+  display: flex;
+  margin-top: 15px;
+  align-items: center;
+  justify-content: space-around;
+  background-color: #e7e7e7;
+  border-radius: 8px;
+}
+
+.display-box-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--green);
+  border-radius: 8px;
+  border: 2px solid var(--green);
+  width: 60px;
+  height: 70px;
+  margin-right: 30px;
+}
+
+.display-box-icon:hover {
+  border: 2px solid var(--purple);
+}
+
+.display-button-tech {
+  background: var(--green);
+  border: none;
+  border-radius: 5px;
+  width: 35px;
+  height: 25px;
+  color: var(--white);
+  margin-right: 34px;
+}
+
+.display-button-tech:hover {
+  filter: brightness(1.2);
+}
+
+.display-box-info {
+  width: 50%;
+}
